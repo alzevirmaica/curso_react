@@ -1,11 +1,20 @@
 import { db } from "./firebaseConnection";
-import { doc, setDoc, collection, addDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 import { useState } from "react";
 import "./app.css";
 
 function App() {
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
+
+  const [posts, setPosts] = useState([]);
 
   async function handleAdd() {
     // try {
@@ -33,17 +42,22 @@ function App() {
 
   async function getPosts() {
     try {
-      const postRef = doc(db, "posts", "12345");
-      const snapshot = await getDoc(postRef);
+      const postRef = collection(db, "posts");
+      const snapshot = await getDocs(postRef);
 
-      if (snapshot.exists()) {
-        setAutor(snapshot.data().autor);
-        setTitulo(snapshot.data().titulo);
-      } else {
-        console.log("Documento não encontrado!");
-      }
+      let lista = [];
+
+      snapshot.forEach((doc) => {
+        lista.push({
+          id: doc.id,
+          titulo: doc.data().titulo,
+          autor: doc.data().autor,
+        });
+      });
+
+      setPosts(lista);
     } catch (error) {
-      console.log("fudeu " + error);
+      console.log("Não foi possível encontrar esse documento" + error);
     }
   }
 
@@ -70,6 +84,17 @@ function App() {
 
         <button onClick={handleAdd}>Cadastrar</button>
         <button onClick={getPosts}>Buscar Posts</button>
+
+        <ul>
+          {posts.map((post) => {
+            return (
+              <li key={post.id}>
+                <span>Titulo: {post.titulo}</span> <br></br>
+                <span>Autor: {post.autor}</span> <br></br> <br></br>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
