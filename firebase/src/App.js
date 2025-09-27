@@ -1,4 +1,4 @@
-import { db } from "./firebaseConnection";
+import { db, auth } from "./firebaseConnection";
 import {
   doc,
   setDoc,
@@ -11,12 +11,15 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import "./app.css";
 
 function App() {
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
   const [idPost, setIdPost] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
   const [posts, setPosts] = useState([]);
 
@@ -108,8 +111,23 @@ function App() {
       const docRef = doc(db, "posts", id);
       await deleteDoc(docRef);
       alert("post deletado com sucesso");
+      setEmail("");
+      setSenha("");
     } catch (error) {
-      console.log("Não foi possível deletar esse documento" + error);
+      if (error.code === "auth/weak-password") {
+        alert("Senha muito fraca");
+      } else if (error.code === "auth/email-already-is-use") {
+        alert("email já existe");
+      }
+    }
+  }
+
+  async function novoUsuario() {
+    try {
+      await createUserWithEmailAndPassword(auth, email, senha);
+      alert("Cadastrado com sucesso!");
+    } catch (error) {
+      console.log("Não foi popssível cadastrar" + error);
     }
   }
 
@@ -118,12 +136,34 @@ function App() {
       <h1>Teste</h1>
 
       <div className="container">
+        <h2>Usuários</h2>
+        <label>Email</label>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Digite um email"
+        ></input>
+        <br></br>
+        <label>Senha</label>
+        <input
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          placeholder="Informa sua senha"
+        ></input>
+        <br></br>
+        <button onClick={novoUsuario}>Cadastrar</button>
+      </div>
+      <br></br>
+      <hr></hr>
+
+      <div className="container">
+        <h2>Posts</h2>
         <label>ID do post:</label>
         <input
           onChange={(e) => setIdPost(e.target.value)}
           value={idPost}
           placeholder="Digite o id do post"
-        ></input>{" "}
+        ></input>
         <br></br>
         <label>Titulo:</label>
         <textarea
@@ -131,15 +171,14 @@ function App() {
           placeholder="Digite o título"
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
-        ></textarea>{" "}
-        <br></br>
+        ></textarea>
         <label>Autor:</label>
         <input
           type="text"
           placeholder="Autor do post"
           value={autor}
           onChange={(e) => setAutor(e.target.value)}
-        ></input>{" "}
+        ></input>
         <br></br>
         <button onClick={handleAdd}>Cadastrar</button> <br></br>
         <button onClick={getPosts}>Buscar Posts</button> <br></br>
