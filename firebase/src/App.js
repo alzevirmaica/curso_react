@@ -15,6 +15,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import "./app.css";
 
@@ -50,6 +51,29 @@ function App() {
     }
 
     loadPosts();
+  }, []);
+
+  useEffect(() => {
+    async function checkLogin() {
+      try {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            setUser(true);
+            setUserDetail({
+              uid: user.uid,
+              email: user.email,
+            });
+          } else {
+            setUser(false);
+            setUserDetail({});
+          }
+        });
+      } catch (error) {
+        console.log("Alzgo deu errado" + error);
+      }
+    }
+
+    checkLogin();
   }, []);
 
   async function handleAdd() {
