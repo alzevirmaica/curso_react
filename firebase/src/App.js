@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { useState } from "react";
 import "./app.css";
@@ -78,6 +79,16 @@ function App() {
     }
   }
 
+  async function excluirPost(id) {
+    try {
+      const docRef = doc(db, "posts", id);
+      await deleteDoc(docRef);
+      alert("post deletado com sucesso");
+    } catch (error) {
+      console.log("Não foi possível deletar esse documento" + error);
+    }
+  }
+
   return (
     <div className="App">
       <h1>Teste</h1>
@@ -115,7 +126,9 @@ function App() {
               <li key={post.id}>
                 <strong>ID: {post.id}</strong> <br></br>
                 <span>Titulo: {post.titulo}</span> <br></br>
-                <span>Autor: {post.autor}</span> <br></br> <br></br>
+                <span>Autor: {post.autor}</span> <br></br>
+                <button onClick={() => excluirPost(post.id)}>Excluir</button>
+                <br></br> <br></br>
               </li>
             );
           })}
