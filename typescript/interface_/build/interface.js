@@ -6,9 +6,9 @@ const burguerK = {
     status: true,
     produtoPromocao: "burguer duplo",
 };
-function novaLoja({ nome, endereco, status }) {
-    console.log(nome);
-    console.log(endereco);
-    console.log(status);
+function novaLoja(propriedades) {
+    console.log(propriedades.nome);
+    console.log(propriedades.endereco);
+    console.log(propriedades.status);
 }
 console.log({ nome: "Alzevir", endereco: "ali", status: false });

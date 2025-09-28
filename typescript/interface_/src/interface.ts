@@ -12,10 +12,10 @@ const burguerK: LojaProps = {
   produtoPromocao: "burguer duplo",
 };
 
-function novaLoja({ nome, endereco, status }: LojaProps) {
-  console.log(nome);
-  console.log(endereco);
-  console.log(status);
+function novaLoja(propriedades: LojaProps) {
+  console.log(propriedades.nome);
+  console.log(propriedades.endereco);
+  console.log(propriedades.status);
 }
 
 console.log({ nome: "Alzevir", endereco: "ali", status: false });
