@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { use, useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface InfoAlunoProps {
+  nome: string;
+  idade: string;
 }
 
-export default App
+export default function App() {
+  const [input, setInput] = useState("");
+  const [idade, setIdade] = useState("");
+
+  const [infoAluno, setInfoAluno] = useState<InfoAlunoProps>();
+
+  const [contador, setContador] = useState(0);
+
+  function mostrarAluno() {
+    setInfoAluno({
+      nome: input,
+      idade: idade,
+    });
+  }
+
+  function adicionar() {
+    setContador((valorAtual) => valorAtual + 1);
+  }
+
+  function diminuir() {
+    if (contador === 0) {
+      return;
+    }
+
+    setContador((valorAtual) => valorAtual - 1);
+  }
+
+  return (
+    <div>
+      <h1>Conhecendo UseState</h1>
+      <input
+        placeholder="Digite o nome"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      ></input>
+      <br></br> <br></br>
+      <input
+        placeholder="Digite a sua idade"
+        value={idade}
+        onChange={(e) => setIdade(e.target.value)}
+      ></input>
+      <br></br> <br></br>
+      <button onClick={mostrarAluno}>Mostrar Aluno</button>
+      <hr></hr>
+      <h3>Bem vindo: {infoAluno?.nome}</h3>
+      <h4>idade: {infoAluno?.idade}</h4>
+      <hr></hr>
+      <br></br>
+      <h1>Contador com UseState</h1>
+      <button onClick={adicionar}>+</button> {contador}{" "}
+      <button onClick={diminuir}>-</button>
+    </div>
+  );
+}
