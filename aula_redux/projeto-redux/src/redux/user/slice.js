@@ -11,7 +11,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     createUser: (state, action) => {
-      console.log(action.payload);
+      if (action.payload.name.length <= 4) {
+        alert("PREENCHA UM NOME COM MAIS DE 4 LETRAS");
+        return { ...state };
+      }
 
       return {
         ...state,
@@ -22,7 +25,47 @@ export const userSlice = createSlice({
         },
       };
     },
+    logoutUser: (state) => {
+      return {
+        ...state,
+        user: null,
+      };
+    },
+    addAddress: (state, action) => {
+      if (action.payload.location === "" || action.payload.number === "") {
+        alert("PREENCHA TODOS OS CAMPOS");
+        return { ...state };
+      }
+
+      if (state.user === null) {
+        alert("Faça o login para cadastrar um endereço");
+        return { ...state };
+      }
+
+      alert("Dados atualizados!");
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          address: {
+            location: action.payload.location,
+            number: action.payload.number,
+          },
+        },
+      };
+    },
+    deleteAddress: (state) => {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          address: null,
+        },
+      };
+    },
   },
 });
-export const { createUser } = userSlice.actions;
+export const { createUser, logoutUser, addAddress, deleteAddress } =
+  userSlice.actions;
 export default userSlice.reducer;
