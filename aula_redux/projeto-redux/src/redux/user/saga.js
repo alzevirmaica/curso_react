@@ -1,4 +1,11 @@
-import { all, takeEvery, call, put, delay } from "redux-saga/effects";
+import {
+  all,
+  takeEvery,
+  call,
+  put,
+  delay,
+  takeLatest,
+} from "redux-saga/effects";
 import { fetchUsersFailure, fetchUsersSuccess } from "./slice";
 
 import axios from "axios";
@@ -17,4 +24,4 @@ function* fetchUsers() {
   }
 }
 
-export default all([takeEvery("user/fetchUsers", fetchUsers)]);
+export default all([takeLatest("user/fetchUsers", fetchUsers)]);
